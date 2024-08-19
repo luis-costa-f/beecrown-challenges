@@ -19,4 +19,43 @@ This guide explains how to create a Python virtual environment, activate it, and
         deactivate
     ```
 
+instalar o golang
+
+baixar a versão mais atual:
+```
+    wget https://go.dev/dl/go1.20.5.linux-amd64.tar.gz
+```
+
+Extrair os arquivos
+```
+    sudo tar -C /usr/local -xzf go1.20.5.linux-amd64.tar.gz
+```
+
+configurar como variavel de ambiente
+```
+    nano ~/.profile
+```
+
+Adicione as seguintes linhas ao final do arquivo:
+
+```
+    export PATH=$PATH:/usr/local/go/bin
+```
+
+Atualize o terminal
+```
+    source ~/.profile
+```
+
+para testar execute 
+```
+    go version
+```
+
+
+execute arquivos golang com 
+
+```
+    go run file_name.go
+```
 

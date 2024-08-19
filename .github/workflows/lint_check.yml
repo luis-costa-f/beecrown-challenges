@@ -1,0 +1,40 @@
+name: Lint Check
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: [python, go, javascript, java, c, cpp]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup ${{ matrix.language }}
+        if: matrix.language == 'python'
+        run: |
+          pip install flake8
+        if: matrix.language == 'go'
+        run: |
+          sudo apt-get install golang
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+        if: matrix.language == 'javascript'
+        run: |
+          npm install -g eslint
+        if: matrix.language == 'java'
+        run: |
+          sudo apt-get install openjdk-11-jdk
+        if: matrix.language == 'c' || matrix.language == 'cpp'
+        run: |
+          sudo apt-get install clang-tidy cppcheck
+
+      - name: Run lint
+        run: |
+          if [ ${{ matrix.language }} == 'python' ]; then flake8 .; fi
+          if [ ${{ matrix.language }} == 'go' ]; then golangci-lint run; fi
+          if [ ${{ matrix.language }} == 'javascript' ]; then eslint .; fi
+          if [ ${{ matrix.language }} == 'java' ]; then java -jar checkstyle.jar -c /google_checks.xml src; fi
+          if [ ${{ matrix.language }} == 'c' ] || [ ${{ matrix.language }} == 'cpp' ]; then clang-tidy **/*.c **/*.cpp; cppcheck .; fi
